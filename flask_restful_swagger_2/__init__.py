@@ -5,12 +5,12 @@ from flask import Blueprint, request
 from flask_restful import (Api as restful_Api, abort as flask_abort,
                            Resource as flask_Resource)
 
-from flask_restful_swagger_2.swagger import (ValidationError, create_swagger_endpoint,
-                                             add_parameters, validate_path_item_object,
-                                             validate_operation_object,
-                                             validate_definitions_object,
-                                             extract_swagger_path, parse_method_doc,
-                                             parse_schema_doc, _auth as auth)
+from betacode_flask_restful_swagger_2.swagger import (ValidationError, create_swagger_endpoint,
+                                                      add_parameters, validate_path_item_object,
+                                                      validate_operation_object,
+                                                      validate_definitions_object,
+                                                      extract_swagger_path, parse_method_doc,
+                                                      parse_schema_doc, _auth as auth)
 
 
 # python3 compatibility
@@ -213,8 +213,8 @@ class _RequestParserExtractorImpl(_BaseExtractorImpl):
         return self._extract_with_reqparser(self._operation)
 
     def _extract_with_reqparser(self, operation):
-        if 'parameters' in operation:
-            raise ValidationError('parameters and reqparser can\'t be in same spec')
+        # if 'parameters' in operation:
+        #     raise ValidationError('parameters and reqparser can\'t be in same spec')
         # we need to pass copy because 'reqparser' will be deleted
         operation = self._get_reqparse_args(operation.copy())
         return self._extract_schemas(operation)
@@ -255,7 +255,7 @@ class _RequestParserExtractorImpl(_BaseExtractorImpl):
                 'schema': model,
                 'required': model.is_required()
             })
-        operation['parameters'] = params
+        operation['parameters'] = operation['parameters'] + params
         return operation
 
     @staticmethod
@@ -278,6 +278,8 @@ class _RequestParserExtractorImpl(_BaseExtractorImpl):
             return 'boolean'
         elif type_ == bin:
             return 'binary'
+        elif type_ == dict:
+            return 'object'
         try:
             if type_ == long:
                 return 'long'
