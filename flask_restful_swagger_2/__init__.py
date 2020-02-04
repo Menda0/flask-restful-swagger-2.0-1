@@ -268,6 +268,8 @@ class _RequestParserExtractorImpl(_BaseExtractorImpl):
         """
         if hasattr(type_, 'swagger_type'):
             return type_.swagger_type
+        elif callable(type_) and type_.__name__ == 'boolean':  # flask-restful boolean
+            return 'boolean'
         elif issubclass(type_, basestring):
             return 'string'
         elif type_ == float:
@@ -278,6 +280,8 @@ class _RequestParserExtractorImpl(_BaseExtractorImpl):
             return 'boolean'
         elif type_ == bin:
             return 'binary'
+        elif type_ == list:
+            return 'array'
         elif type_ == dict:
             return 'object'
         try:
